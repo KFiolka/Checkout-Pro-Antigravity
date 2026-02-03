@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ui/screens/home_screen.dart';
+import 'ui/app_theme.dart';
 
 void main() {
   runApp(
@@ -17,11 +18,7 @@ class CheckoutProApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Checkout Pro',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.darkTheme,
       home: const HomeScreen(),
     );
   }
