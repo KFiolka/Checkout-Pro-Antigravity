@@ -18,7 +18,7 @@ class GameNotifier extends StateNotifier<GameEngine?> {
     state = CricketEngine(playerNames: players);
   }
 
-  void inputScore(int score) {
+  bool inputScore(int score) {
     final engine = state;
     if (engine is X01Engine) {
       bool valid = engine.inputScore(score);
@@ -26,7 +26,9 @@ class GameNotifier extends StateNotifier<GameEngine?> {
       if (engine.isGameOver) {
         _saveMatch(engine);
       }
+      return valid;
     }
+    return false;
   }
   
   void inputCricketDart(int target, int multiplier) {

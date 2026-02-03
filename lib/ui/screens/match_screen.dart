@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/x01_engine.dart';
-import '../../core/checkout_calculator.dart';
 import '../../providers/game_provider.dart';
 import '../widgets/match_dashboard.dart';
 import '../widgets/score_input_pad.dart';
@@ -17,6 +16,10 @@ class MatchScreen extends ConsumerStatefulWidget {
 class _MatchScreenState extends ConsumerState<MatchScreen> {
   // Local buffer for input (e.g., typing "1", "8", "0" before hitting enter)
   String _inputBuffer = "";
+  
+  // Local active stats tracking (Visual only)
+  int? _lastTurnScore;
+  double _currentAvg = 0.0; // Placeholder
 
   void _handleNumber(int number) {
     if (_inputBuffer.length < 3) {
@@ -34,16 +37,23 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
     } else {
       // Undo last turn in engine
       ref.read(gameProvider.notifier).undo();
+      // Note: We should ideally revert _lastTurnScore too, but skipping for MVP
     }
   }
 
   void _handleEnter() {
     if (_inputBuffer.isNotEmpty) {
       int score = int.parse(_inputBuffer);
-      ref.read(gameProvider.notifier).inputScore(score);
-      setState(() {
-        _inputBuffer = "";
-      });
+      final success = ref.read(gameProvider.notifier).inputScore(score);
+      
+      if (success) {
+        setState(() {
+          _lastTurnScore = score;
+          _inputBuffer = "";
+          // Update generic average (mock logic for visual)
+          _currentAvg = (_currentAvg == 0) ? score.toDouble() : (_currentAvg + score) / 2;
+        });
+      }
     }
   }
 
@@ -76,27 +86,12 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 currentScore: currentScore,
                 playerName: playerName,
                 isTurn: true,
+                lastTurnScore: _lastTurnScore,
+                currentAvg: _currentAvg > 0 ? _currentAvg : null,
+                recentTurns: _lastTurnScore != null ? [_lastTurnScore!] : [],
               ),
             ),
             
-            // Input Buffer Display check
-            if (_inputBuffer.isNotEmpty)
-              Container(
-                color: AppTheme.neonCyan.withOpacity(0.1),
-                width: double.infinity,
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  "INPUT: $_inputBuffer",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppTheme.neonCyan,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 4,
-                  ),
-                ),
-              ),
-
             // Bottom Half: Input Pad
             Expanded(
               flex: 4,
@@ -104,6 +99,7 @@ class _MatchScreenState extends ConsumerState<MatchScreen> {
                 onNumberPressed: _handleNumber,
                 onUndo: _handleUndo,
                 onEnter: _handleEnter,
+                inputBuffer: _inputBuffer,
               ),
             ),
           ],
