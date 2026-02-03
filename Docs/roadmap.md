@@ -11,12 +11,12 @@
 - [x] Dashboard & HUD layout
 - [x] Training Selector UI
 
-## Milestone 3: Core Logic & AI [ ]
-- [ ] [PLANNED] X01 Match Controller
-- [ ] [PLANNED] Checkout Calculator (Local)
-- [ ] [PLANNED] Dartbot (Gaussian Spread)
+## Milestone 3: Core Logic & AI [x]
+- [x] X01 Match Controller
+- [x] Checkout Calculator (Local)
+- [x] Dartbot (Gaussian Spread)
 
-## Milestone 4: Persistence & Stats [ ]
-- [ ] [PLANNED] Match History persistence
-- [ ] [PLANNED] Player Stats (Averages, Checkout %)
-- [ ] [PLANNED] Session Analytics
+## Milestone 4: Persistence & Stats [x]
+- [x] Match History persistence
+- [x] Player Stats (Averages, Checkout %)
+- [x] Session Analytics
